@@ -13,8 +13,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
-
-
 # Initialize sentiment analyzer
 sentiment_analyzer = SentimentIntensityAnalyzer()
 nlp = spacy.load("en_core_web_md")
