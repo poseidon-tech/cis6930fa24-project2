@@ -17,6 +17,7 @@ xgboost = "*"
 openpyxl = "*"
 vadersentiment = "*"
 spacy = "*"
+pytest = "*"
 
 [dev-packages]
 
