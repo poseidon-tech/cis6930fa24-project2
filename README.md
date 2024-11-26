@@ -122,7 +122,10 @@ The central function that orchestrates the entire unredaction pipeline. It reads
 ### `read_data()`
 Reads the `unredactor.tsv` file, preprocesses the text data by filtering valid rows, splits the data into training and validation sets based on the split column, and fits the TfidfVectorizer on the context column of the training dataset.
 
-### `feature_extraction(train_data, val_data)`
+### `clean_and_tokenize()`
+This function cleans and tokenizes input text by replacing redaction blocks (`█████████`) with the token `@$@` and splitting the text into individual words and punctuation.
+
+### `process_dataset_features(train_data, val_data)`
 Extracts meaningful features for training and validation datasets by processing each row using `extract_features`. Converts the extracted feature dictionaries into numerical feature vectors using a DictVectorizer for compatibility with machine learning models. Returns the feature vectors for both datasets and the trained DictVectorizer.
 
 ### `extract_features(row)`
@@ -147,8 +150,20 @@ The `evaluation` function computes key performance metrics, including accuracy, 
 
 **Functions in `test_unredactor.py`:**
 
+### `test_read_data_file_not_found()`
+This test function verifies the behavior of the `read_data()` function when provided with a non-existent file. It ensures that the function raises a `FileNotFoundError` as expected when the specified file is not found.
+
 ### `test_clean_and_tokenize()`
-This test function verifies the correctness of the `clean_and_tokenize()` function, which is responsible for cleaning and tokenizing input text.
+This test function validates the `clean_and_tokenize()` function, ensuring that it correctly cleans input text, replaces redaction blocks (`█████████`) with the token `@$@`, and tokenizes the text into words and punctuation correctly.
+
+### `test_extract_features()`
+This test function tests the `extract_features()` function by comparing the extracted features of a sample row from the dataset with a manually defined expected result. It checks features such as TF-IDF values, POS tags, sentiment scores, redaction length, and entity counts. Floating-point comparisons use `np.isclose` to handle precision.
+
+### `test_process_dataset_features()`
+This test verifies the `process_dataset_features()` function by processing a sample dataset and validating the output feature matrix (`X_train`), target labels (`y_train`), and the initialized `DictVectorizer`. It ensures that the dimensions and specific feature values in `X_train` align with expectations.
+
+### `test_train()`
+This test function validates the `train()` function by training a `RandomForestClassifier` pipeline on synthetic data generated using `make_classification`. It ensures that the returned pipeline is a valid scikit-learn `Pipeline` object and that the number of predictions matches the validation dataset size.
 
 
 

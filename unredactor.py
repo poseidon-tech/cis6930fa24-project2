@@ -70,8 +70,8 @@ def extract_features(row):
     return features
 
 # Read data, preprocess and load it in Data Frame
-def read_data():
-    df = pd.read_csv('unredactor.tsv', sep='\t', names=['split', 'name', 'context'], on_bad_lines='skip', index_col=None, quoting=3, header=0)
+def read_data(filepath):
+    df = pd.read_csv(filepath, sep='\t', names=['split', 'name', 'context'], on_bad_lines='skip', index_col=None, quoting=3, header=0)
     df = df[df['context'].notna() & (df['context'].str.strip() != '')]
     train_data = df[df['split'] == 'training']
     val_data = df[df['split'] == 'validation']
@@ -79,7 +79,7 @@ def read_data():
     return train_data,val_data
 
 # Extract features 
-def feature_extraction(train_data,val_data):
+def process_dataset_features(train_data,val_data):
     # Training data
     X_train = []
     y_train = []
@@ -119,6 +119,7 @@ def train(X_train,y_train,X_val,y_val):
 
     return pipeline,y_pred
 
+# Evaluates the trained model
 def evaluation(y_val,y_pred):
     # Metrics
     accuracy = accuracy_score(y_val, y_pred)
@@ -132,7 +133,7 @@ def evaluation(y_val,y_pred):
     print(f"Recall: {recall:.2f}")
     print(f"F1-Score: {f1:.2f}")
 
-
+# Reads the test.tsv and predicted output is printed to submission.tsv  
 def predict_test_tsv(pipeline,vec):
     #Process test.tsv
     test_data = pd.read_csv('test.tsv', sep='\t', names=['id', 'context'], header=None)
@@ -153,10 +154,10 @@ def predict_test_tsv(pipeline,vec):
     submission.to_csv('submission.tsv', sep='\t', index=False, header=False)
     print("Test predictions saved to submission.tsv")
 
-
+# Entry Point
 def main():
-    train_data, val_data = read_data()
-    X_train,y_train,X_val,y_val,vec = feature_extraction(train_data,val_data)
+    train_data, val_data = read_data('unredactor.tsv')
+    X_train,y_train,X_val,y_val,vec = process_dataset_features(train_data,val_data)
     pipeline,y_pred = train(X_train,y_train,X_val,y_val)
     evaluation(y_val,y_pred)
     predict_test_tsv(pipeline,vec)
