@@ -49,7 +49,6 @@ pipenv run pytest
 
 [watch](https://github.com/user-attachments/assets/7721f4f7-f138-4f7f-9bc8-fefec64a8cb0)
 
-am Execution
 
 
 
