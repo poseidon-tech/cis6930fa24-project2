@@ -31,7 +31,8 @@ def clean_and_tokenize(text):
 # Function to extract features
 def extract_features(row):
     context = row['context']
-    redaction_length = len(row['name']) if 'name' in row else len(row['context'])  # Length fallback for test data
+    redaction_length = len(re.findall(r'█', context))
+    #redaction_length = len(row['name']) if 'name' in row else len(row['context'])  # Length fallback for test data
     tokens = clean_and_tokenize(context)
     pos_tags = pos_tag(tokens)
     doc = nlp(context)
